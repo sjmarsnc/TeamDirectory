@@ -33,7 +33,7 @@ const employeeQuestions = [
     }];
 
 // question only for managers
-const mgrQuestion = [
+let mgrQuestion = [
     {
         type: "input",
         name: "office",
@@ -41,7 +41,7 @@ const mgrQuestion = [
     }];
 
 // question only for engineers
-const engQuestion = [
+let engQuestion = [
     {
         type: "input",
         name: "github",
@@ -49,7 +49,7 @@ const engQuestion = [
     }];
 
 // question only for interns
-const internQuestion = [
+let internQuestion = [
     {
         type: "input",
         name: "school",
@@ -72,62 +72,70 @@ const moreEmployees = [
         message: "Do you have more employees to enter?"
     }];
 
+
+mgrQuestions = mgrQuestion.concat(moreEmployees); 
+internQuestions = internQuestion.concat(moreEmployees); 
+engQuestions = engQuestion.concat(moreEmployees); 
+
+console.log(mgrQuestions);  
+
 // var teamName = ''; 
 var teamMembers = [];   // team members
 var isMore = true;
+var i = 0;  
 
+buildTeam();  
 
-// buildTeam();  
-
-async function buildTeam() {
-    var i = 0;
+function buildTeam() {
     inquirer.prompt(teamNameQuestion)
         .then(answer => {
             teamName = answer.teamName;
             console.log('Please enter the manager of this team first.');
 
-            while (isMore) {
-                inquirer.prompt(employeeQuestions)
-                    .then(answers => {
-                        i++;
-                        if (i > 3) return;   // trying to stop infinite loop 
-                        const { memberName, role, id, email } = answers;
-                        switch (role) {
-                            case "Manager":
-                                inquirer.prompt(mgrQuestion).then(answer => {
-                                    let employee = new Manager(memberName, id, email, answer.office);
-                                    teamMembers.push(employee);
-                                })
-                                break;
+            oneEmployee();   // will recurse until no more employees 
 
-                            case "Engineer":
-                                inquirer.prompt(engQuestion).then(answer => {
-                                    let employee = new Engineer(memberName, id, email, answer.github);
-                                    teamMembers.push(employee);
-                                })
-                                break;
-
-                            case "Intern":
-                                inquirer.prompt(engQuestion).then(answer => {
-                                    let employee = new Intern(memberName, id, email, answer.school);
-                                    teamMembers.push(employee);
-                                })
-                                break;
-                        }
-                        // teamMembers.push(employee); 
-                        inquirer.prompt(moreEmployees).then(answer => {
-                            isMore = answer.more;
-                        });
-
-                    });
-            }
             //  user said no more employees, ready to write the html file 
             writePage();
-
+            
         });
-
+        
+    }
+    
+    function oneEmployee() {
+        
+        inquirer.prompt(employeeQuestions)
+            .then(answers => {
+                const { memberName, role, id, email } = answers;
+                switch (role) {
+                    case "Manager":
+                        inquirer.prompt(mgrQuestions).then(answer => {
+                            let employee = new Manager(memberName, id, email, answer.office);
+                            teamMembers.push(employee);
+                            if (answer.more) oneEmployee();  
+                        })
+                        break;
+    
+                    case "Engineer":
+                        inquirer.prompt(engQuestions).then(answer => {
+                            let employee = new Engineer(memberName, id, email, answer.github);
+                            teamMembers.push(employee);
+                            if (answer.more) oneEmployee();  
+                        })
+                        break;
+    
+                    case "Intern":
+                        inquirer.prompt(internQuestions).then(answer => {
+                            let employee = new Intern(memberName, id, email, answer.school);
+                            teamMembers.push(employee);
+                            if (answer.more) oneEmployee();  
+                        })
+                        break;
+                }
+    
+            });
+    
 }
-
+                
 function writePage() {
     console.log("Team Name: ", teamName);
     console.log(teamMembers);
