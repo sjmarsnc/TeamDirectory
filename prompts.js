@@ -20,21 +20,19 @@ async function getDirector () {
     }
 
 
-// for (let i = 0; i < 4 ; i ++) { 
-//     team.push(getMemberInfo()); 
-// }
+
 
 // console.log(team);  
 
 
-var test = getMemberInfo(); 
+// var test = getMemberInfo(); 
 
-console.log(test); 
+// console.log(`Object returned: ${test}`); 
 
-async function getMemberInfo () {
-    try { 
+function getMemberInfo () {
+    // try { 
 
-        let answers = await inquirer.prompt([
+        inquirer.prompt([
             {
                 type: "input",
                 name: "memberName", 
@@ -60,14 +58,15 @@ async function getMemberInfo () {
                 name: "email", 
                 message: "Please enter the team member's email address:"  
             }
-        ]); 
+        ]).then ( answers => {
+
             
-        const { memberName, role, id, email } = answers; 
+            const { memberName, role, id, email } = answers; 
             
-        switch (answers.role) {
-            
+            switch (answers.role) {
+                
                 case "Manager": 
-                let answerm = await inquirer.prompt([
+                let answerm = inquirer.prompt([
                     {
                         type: "input",
                         name: "office",
@@ -76,36 +75,38 @@ async function getMemberInfo () {
                 ]);
                 let manager = new Manager(memberName, id, email, answerm.office); 
                 return manager;  
-               
+                
                 
                 case "Engineer": 
-                    let answere = await inquirer.prompt([
+                let answere = inquirer.prompt([
                     {
                         type: "input",
                         name: "github",
                         message: "What is this member's github username?"
                     }
-                    ]); 
-                    let engineer = new Engineer(memberName, id, email, answere.github);   
-                    return engineer; 
-               
+                ]); 
+                let engineer = new Engineer(memberName, id, email, answere.github);   
+                return engineer; 
+                
                 
                 case "Intern": 
-                    let answeri = await inquirer.prompt([
+                let answeri = inquirer.prompt([
                     {
                         type: "input",
                         name: "school",
                         message: "What is this member's school"
                     }
-                    ]);
-                    let intern= new Intern(memberName, id, email, answeri.school);   
-                    return intern; 
-                 
-            }
-        
-    }   catch (err) {
-        console.log(err); 
-    }
-}
+                ]);
+                let intern= new Intern(memberName, id, email, answeri.school);   
+                return intern; 
+                
+                //         }
+                
+                // }   catch (err) {
+                    //     console.log(err); 
+                    // }
+                }
+            }); 
+        }
 
   
