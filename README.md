@@ -6,7 +6,7 @@ This project prompts for some key information about a team and then creates a co
 
 It is helpful for a manager to have an html page showing pertinent information for their direct reports, and the page might also be useful to those from other departments.  
 
-[./templates/sample.png]
+![sample output](./templates/sample.png)
 
 ## Usage 
 
