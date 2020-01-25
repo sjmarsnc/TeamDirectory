@@ -7,7 +7,18 @@ const Intern = require("./lib/Intern");
 var teamName = ''; 
 var team = [];   // team members
 
-async function getDirector () { 
+buildTeam();  
+
+async function buildTeam() {
+    var teamName = await getTeamName();  
+    console.log(teamName); 
+
+    var test = await getMemberInfo();  
+    console.log(test);  
+
+}
+
+async function getTeamName () { 
     
     let answer = await inquirer.prompt([
       {
@@ -17,10 +28,11 @@ async function getDirector () {
       }
     ]); 
     const { teamName } = answer; 
+    return answer;  
     }
 
 
-
+// var director = getDirector(); 
 
 // console.log(team);  
 
@@ -29,7 +41,7 @@ async function getDirector () {
 
 // console.log(`Object returned: ${test}`); 
 
-function getMemberInfo () {
+async function getMemberInfo () {
     // try { 
 
         inquirer.prompt([

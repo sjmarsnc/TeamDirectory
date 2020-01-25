@@ -9,7 +9,11 @@ const employeeQuestions = [
     {
         type: "input",
         name: "memberName",
-        message: "Please enter the employee's name:"
+        message: "Please enter the employee's name:",
+        validate: function (value) {
+            if ((/.+/).test(value)) { return true; }
+            return 'Name is required';
+        }
     },
     {
         type: "list",
@@ -37,7 +41,11 @@ let mgrQuestion = [
     {
         type: "input",
         name: "office",
-        message: "Where is this member's office?"
+        message: "Where is this member's office?",
+        validate: function (value) {
+            if ((/.+/).test(value)) { return true; }
+            return 'Office is required';
+        }
     }];
 
 // question only for engineers
@@ -53,7 +61,11 @@ let internQuestion = [
     {
         type: "input",
         name: "school",
-        message: "What is this member's school"
+        message: "What is this member's school?",
+        validate: function (value) {
+            if ((/.+/).test(value)) { return true; }
+            return 'School is required';
+        }
     }];
 
 // get "team name" for header     
@@ -111,24 +123,30 @@ function buildTeam() {
                         inquirer.prompt(mgrQuestions).then(answer => {
                             let employee = new Manager(memberName, id, email, answer.office);
                             teamMembers.push(employee);
-                            if (answer.more) oneEmployee();  
-                        })
+                            console.log(teamMembers); 
+                            if (answer.more) oneEmployee(); 
+                            else return;  
+                        });
                         break;
     
                     case "Engineer":
                         inquirer.prompt(engQuestions).then(answer => {
                             let employee = new Engineer(memberName, id, email, answer.github);
                             teamMembers.push(employee);
-                            if (answer.more) oneEmployee();  
-                        })
+                            console.log(teamMembers); 
+                            if (answer.more) oneEmployee(); 
+                            else return;  
+                        });
                         break;
     
                     case "Intern":
                         inquirer.prompt(internQuestions).then(answer => {
                             let employee = new Intern(memberName, id, email, answer.school);
                             teamMembers.push(employee);
-                            if (answer.more) oneEmployee();  
-                        })
+                            console.log(teamMembers); 
+                            if (answer.more) oneEmployee(); 
+                            else return;   
+                        });
                         break;
                 }
     
