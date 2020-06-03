@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 const util = require("util");
-const fs = require("fs");  
+const fs = require("fs");
 const Engineer = require("./lib/Engineer");
 const Manager = require("./lib/Manager");
 const Intern = require("./lib/Intern");
@@ -86,14 +86,14 @@ const moreEmployees = [
     }];
 
 
-mgrQuestions = mgrQuestion.concat(moreEmployees); 
-internQuestions = internQuestion.concat(moreEmployees); 
-engQuestions = engQuestion.concat(moreEmployees); 
+mgrQuestions = mgrQuestion.concat(moreEmployees);
+internQuestions = internQuestion.concat(moreEmployees);
+engQuestions = engQuestion.concat(moreEmployees);
 
 var teamMembers = [];   // team members
-var isMore = true; 
+var isMore = true;
 
-buildTeam();  
+buildTeam();
 
 function buildTeam() {
 
@@ -107,60 +107,60 @@ function buildTeam() {
 
             //  user said no more employees, ready to write the html file 
             // writePage();
-            
+
         });
-        
-    }
-    
-    function oneEmployee() {
-        
-        inquirer.prompt(employeeQuestions)
-            .then(answers => {
-                const { memberName, role, id, email } = answers;
-                switch (role) {
-                    case "Manager":
-                        inquirer.prompt(mgrQuestions).then(answer => {
-                            let employee = new Manager(memberName, id, email, answer.office);
-                            teamMembers.push(employee);
-                            if (answer.more) oneEmployee(); 
-                            else { 
-                                writePage(); return; 
-                            }  
-                        });
-                        break;
-    
-                    case "Engineer":
-                        inquirer.prompt(engQuestions).then(answer => {
-                            let employee = new Engineer(memberName, id, email, answer.github);
-                            teamMembers.push(employee);
-                            if (answer.more) oneEmployee(); 
-                            else { 
-                                writePage(); return; 
-                            } 
-                        });
-                        break;
-    
-                    case "Intern":
-                        inquirer.prompt(internQuestions).then(answer => {
-                            let employee = new Intern(memberName, id, email, answer.school);
-                            teamMembers.push(employee);
-                            if (answer.more) oneEmployee(); 
-                            else { 
-                                writePage(); return; 
-                            }  
-                        });
-                        break;
-                }
-    
-            });
-    
-            function writePage() {
-                
-                let topDog = teamMembers[0]; 
-                let topRole = topDog.getRole(); 
+
+}
+
+function oneEmployee() {
+
+    inquirer.prompt(employeeQuestions)
+        .then(answers => {
+            const { memberName, role, id, email } = answers;
+            switch (role) {
+                case "Manager":
+                    inquirer.prompt(mgrQuestions).then(answer => {
+                        let employee = new Manager(memberName, id, email, answer.office);
+                        teamMembers.push(employee);
+                        if (answer.more) oneEmployee();
+                        else {
+                            writePage(); return;
+                        }
+                    });
+                    break;
+
+                case "Engineer":
+                    inquirer.prompt(engQuestions).then(answer => {
+                        let employee = new Engineer(memberName, id, email, answer.github);
+                        teamMembers.push(employee);
+                        if (answer.more) oneEmployee();
+                        else {
+                            writePage(); return;
+                        }
+                    });
+                    break;
+
+                case "Intern":
+                    inquirer.prompt(internQuestions).then(answer => {
+                        let employee = new Intern(memberName, id, email, answer.school);
+                        teamMembers.push(employee);
+                        if (answer.more) oneEmployee();
+                        else {
+                            writePage(); return;
+                        }
+                    });
+                    break;
+            }
+
+        });
+
+    function writePage() {
+
+        let topDog = teamMembers[0];
+        let topRole = topDog.getRole();
 
 
-                var generatedHTML = `
+        var generatedHTML = `
                 <!DOCTYPE html>
                 <html lang="en">
                 
@@ -231,7 +231,7 @@ function buildTeam() {
                                         <p class="card-text bg-light">
                                             <div class="btn-group-vertical">
                                                 <button type="button" class="btn infotable">ID: ${topDog.id}</button>
-                                                <button type="button" class="btn infotable">Email: ${topDog.email}</button>
+                                                <button type="button" class="btn infotable">Email: <a href="mailto:${topDog.email}">${topDog.email}</a></button>
                                                 <button type="button" class="btn infotable">Office: ${topDog.getOfficeNumber()}</button>
                                             </div>
                                         </p>
@@ -245,31 +245,31 @@ function buildTeam() {
                     <div class="container">
                     <!-- all other members of team -->
                     <div class="row">
-                `; 
-                for (let i = 1; i < teamMembers.length; i++) {
-                    let employee = teamMembers[i]; 
-                    let icon = "";  
-                    let role = employee.getRole(); 
-                    let optionTitle = "" ; 
-                    let optionValue = "";  
-                    switch (role) {
-                        case "Manager": 
-                            icon = "fa-coffee"; 
-                            optionTitle = "Office:";
-                            optionValue = employee.getOfficeNumber(); 
-                            break;
-                        case "Engineer": 
-                            icon = "fa-wrench"; 
-                            optionTitle = "Github:";
-                            optionValue = employee.getGithub(); 
-                            break; 
-                        case "Intern": 
-                            icon = "fa-graduation-cap"; 
-                            optionTitle = "School:"; 
-                            optionValue = employee.getSchool();                             
-                            break;                           
-                    }
-                    generatedHTML = generatedHTML + `
+                `;
+        for (let i = 1; i < teamMembers.length; i++) {
+            let employee = teamMembers[i];
+            let icon = "";
+            let role = employee.getRole();
+            let optionTitle = "";
+            let optionValue = "";
+            switch (role) {
+                case "Manager":
+                    icon = "fa-coffee";
+                    optionTitle = "Office:";
+                    optionValue = employee.getOfficeNumber();
+                    break;
+                case "Engineer":
+                    icon = "fa-wrench";
+                    optionTitle = "Github:";
+                    optionValue = `<a href="https://github.com/${employee.getGithub()}">${employee.getGithub()}<a>`;
+                    break;
+                case "Intern":
+                    icon = "fa-graduation-cap";
+                    optionTitle = "School:";
+                    optionValue = employee.getSchool();
+                    break;
+            }
+            generatedHTML = generatedHTML + `
                     <div class="col-12 col-sm-6 col-lg-4">
                     <div class="card shadow-lg m-2">
                         <div class="card-header text-left">
@@ -281,32 +281,32 @@ function buildTeam() {
                             <p class="card-text bg-light">
                                 <div class="btn-group-vertical">
                                     <button type="button" class="btn infotable">ID: ${employee.id}</button>
-                                    <button type="button" class="btn infotable">Email: ${employee.email}</button>
+                                    <button type="button" class="btn infotable">Email: <a href="mailto:${employee.email}">${employee.email}</a></button>
                                     <button type="button" class="btn infotable">${optionTitle} ${optionValue}</button>
                                 </div>
                             </p>
                         </div>
                     </div>
                 </div>
-                    `; 
-                }
-            generatedHTML = generatedHTML + `
+                    `;
+        }
+        generatedHTML = generatedHTML + `
             </div>
     </div>
 
 </body>
 </html>
-            `; 
-            const writeFileAsync = util.promisify(fs.writeFile);
+            `;
+        const writeFileAsync = util.promisify(fs.writeFile);
 
-            writeFileAsync("team.html", generatedHTML).then(function() {
-                console.log("Successfully wrote team.html file");
-              });
+        writeFileAsync("team.html", generatedHTML).then(function () {
+            console.log("Successfully wrote team.html file");
+        });
 
 
-            
-            }
+
+    }
 }
-                
+
 
 
